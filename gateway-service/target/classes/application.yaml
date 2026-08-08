@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: GATEWAY-SERVICE
+
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+
+            - id: USER-PROFILE-SERVICE
+              uri: lb://USER-PROFILE-SERVICE
+              predicates:
+                - Path=/userprofile/**
+
+            - id: CAR-SERVICE-OPERATIONS
+              uri: lb://CAR-SERVICE-OPERATIONS
+              predicates:
+                - Path=/carservice/**
+
+            - id: CAR-DETAILS-VALIDATION-SERVICE
+              uri: lb://CAR-DETAILS-VALIDATION-SERVICE
+              predicates:
+                - Path=/validation/**
+
+            - id: AUDIT-SERVICE
+              uri: lb://AUDIT-SERVICE
+              predicates:
+                - Path=/auditservice/**
+
+            - id: AUTH-SERVICE
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth/**
+
+server:
+ port: 8765
+
+eureka:
+ client:
+   serviceUrl:
+     defaultZone: http://localhost:8761/eureka/
+   fetchRegistry: true
+   registerWithEureka: true
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Auth Service
+        url: /auth-service/v3/api-docs
+
+      - name: Car Service Operations
+        url: /car-service-operations/v3/api-docs
+
+      - name: Car Validation Service
+        url: /car-details-validation-service/v3/api-docs
+
+      - name: User Profile Service
+        url: /user-profile-service/v3/api-docs
+
+      - name: Audit Service
+        url: /audit-service/v3/api-docs
+
+management:
+  endpoints:
+    web:
+     exposure:
+        include: "*"
